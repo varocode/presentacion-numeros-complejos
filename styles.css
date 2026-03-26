@@ -291,13 +291,10 @@ body {
 .cover-university { margin-bottom: 30px; }
 
 .uni-logo {
-  height: 90px;
+  height: 100px;
   width: auto;
   margin-bottom: 10px;
-  background: white;
-  padding: 8px 12px;
-  border-radius: 12px;
-  object-fit: contain;
+  filter: drop-shadow(0 2px 12px rgba(92, 107, 192, 0.3));
 }
 
 .uni-badge {
