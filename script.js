@@ -594,6 +594,7 @@ function drawRotation() {
 // CANVAS: Mandelbrot Progressive Build (Slide 13)
 // ============================================
 let buildAnimId = null;
+let buildTimeoutId = null;
 
 function drawMandelbrotBuild() {
   const canvas = document.getElementById('mandelbrotBuildCanvas');
@@ -601,85 +602,177 @@ function drawMandelbrotBuild() {
   const ctx = canvas.getContext('2d');
   const w = canvas.width;
   const h = canvas.height;
-  const maxIter = 80;
 
   if (buildAnimId) cancelAnimationFrame(buildAnimId);
+  if (buildTimeoutId) clearTimeout(buildTimeoutId);
 
-  // Clear canvas
   ctx.fillStyle = '#111738';
   ctx.fillRect(0, 0, w, h);
 
   const infoEl = document.getElementById('buildProgress');
   const statsEl = document.getElementById('buildStats');
 
+  // --- Color function (reused in both phases) ---
+  function mandelbrotColor(x0, y0, maxIter) {
+    let x = 0, y = 0, iter = 0;
+    while (x * x + y * y <= 4 && iter < maxIter) {
+      const xt = x * x - y * y + x0;
+      y = 2 * x * y + y0;
+      x = xt;
+      iter++;
+    }
+    if (iter === maxIter) return [10, 14, 39];
+    const t = iter / maxIter;
+    return [
+      Math.min(255, Math.floor(9 * (1 - t) * t * t * t * 255) + 40),
+      Math.min(255, Math.floor(15 * (1 - t) * (1 - t) * t * t * 255) + 50),
+      Math.min(255, Math.floor(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255) + 180)
+    ];
+  }
+
+  // --- Render full frame at given viewport ---
+  function renderFrame(centerX, centerY, zoom, maxIter) {
+    const imageData = ctx.createImageData(w, h);
+    const spanX = 3.5 / zoom;
+    const spanY = spanX * (h / w);
+    for (let py = 0; py < h; py++) {
+      for (let px = 0; px < w; px++) {
+        const x0 = centerX + (px / w - 0.5) * spanX;
+        const y0 = centerY + (py / h - 0.5) * spanY;
+        const [r, g, b] = mandelbrotColor(x0, y0, maxIter);
+        const idx = (py * w + px) * 4;
+        imageData.data[idx] = r;
+        imageData.data[idx + 1] = g;
+        imageData.data[idx + 2] = b;
+        imageData.data[idx + 3] = 255;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  // ============================
+  // PHASE 1: Progressive build
+  // ============================
   let currentRow = 0;
-  const rowsPerFrame = 3; // render N rows per frame for visible speed
+  const rowsPerFrame = 3;
   let totalInSet = 0;
   let totalEscaped = 0;
+  const buildMaxIter = 80;
+  // Viewport for initial build
+  const initCx = -0.5, initCy = 0;
+  const initSpanX = 3.5, initSpanY = initSpanX * (h / w);
 
   function renderRows() {
     if (currentSlide !== 13) return;
 
     for (let batch = 0; batch < rowsPerFrame && currentRow < h; batch++, currentRow++) {
       for (let px = 0; px < w; px++) {
-        const x0 = (px - w * 0.65) / (w * 0.25);
-        const y0 = (currentRow - h * 0.5) / (h * 0.4);
-        let x = 0, y = 0, iter = 0;
+        const x0 = initCx + (px / w - 0.5) * initSpanX;
+        const y0 = initCy + (currentRow / h - 0.5) * initSpanY;
+        const [r, g, b] = mandelbrotColor(x0, y0, buildMaxIter);
 
-        while (x * x + y * y <= 4 && iter < maxIter) {
-          const xtemp = x * x - y * y + x0;
-          y = 2 * x * y + y0;
-          x = xtemp;
-          iter++;
-        }
+        if (r === 10 && g === 14 && b === 39) totalInSet++;
+        else totalEscaped++;
 
-        if (iter === maxIter) {
-          ctx.fillStyle = '#0a0e27';
-          totalInSet++;
-        } else {
-          const t = iter / maxIter;
-          const r = Math.min(255, Math.floor(9 * (1 - t) * t * t * t * 255) + 40);
-          const g = Math.min(255, Math.floor(15 * (1 - t) * (1 - t) * t * t * 255) + 50);
-          const b = Math.min(255, Math.floor(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255) + 180);
-          ctx.fillStyle = `rgb(${r},${g},${b})`;
-          totalEscaped++;
-        }
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
         ctx.fillRect(px, currentRow, 1, 1);
       }
     }
 
-    // Update progress info
     const pct = Math.round((currentRow / h) * 100);
     if (infoEl) infoEl.textContent = currentRow < h
       ? `Construyendo... ${pct}% — Fila ${currentRow} de ${h}`
-      : `Completado — ${h} filas renderizadas`;
+      : '✓ Construcción completa — Iniciando zoom infinito...';
     if (statsEl) statsEl.textContent = `En el conjunto: ${totalInSet.toLocaleString()} px | Escaparon: ${totalEscaped.toLocaleString()} px`;
 
-    // Draw scan line
     if (currentRow < h) {
+      // Scan line
       ctx.strokeStyle = 'rgba(239, 83, 80, 0.6)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(0, currentRow);
       ctx.lineTo(w, currentRow);
       ctx.stroke();
-
       buildAnimId = requestAnimationFrame(renderRows);
     } else {
-      // Completed — wait and restart
-      setTimeout(() => {
-        if (currentSlide === 13) {
-          currentRow = 0;
-          totalInSet = 0;
-          totalEscaped = 0;
-          ctx.fillStyle = '#111738';
-          ctx.fillRect(0, 0, w, h);
-          buildAnimId = requestAnimationFrame(renderRows);
-        }
-      }, 3000);
+      // Phase 1 done — wait 2s then start zoom
+      buildTimeoutId = setTimeout(() => {
+        if (currentSlide === 13) startZoomPhase();
+      }, 2000);
     }
   }
 
+  // ============================
+  // PHASE 2: Infinite zoom
+  // ============================
+  // Zoom target: Seahorse Valley (beautiful boundary detail)
+  const zoomTargetX = -0.743643887037158;
+  const zoomTargetY = 0.131825904205311;
+
+  let currentZoom = 1;
+  const zoomSpeed = 1.012; // smooth exponential zoom
+  const maxZoom = 50000;
+
+  function startZoomPhase() {
+    currentZoom = 1;
+
+    function zoomFrame() {
+      if (currentSlide !== 13) return;
+
+      currentZoom *= zoomSpeed;
+
+      // Increase iterations with zoom for better detail
+      const dynamicIter = Math.min(300, Math.floor(80 + Math.log2(currentZoom) * 20));
+
+      // Interpolate center from initial view to target
+      const t = Math.min(1, Math.log(currentZoom) / Math.log(200));
+      const cx = initCx + (zoomTargetX - initCx) * t;
+      const cy = initCy + (zoomTargetY - initCy) * t;
+
+      renderFrame(cx, cy, currentZoom, dynamicIter);
+
+      // Overlay zoom info
+      const zoomLabel = currentZoom < 1000
+        ? `x${currentZoom.toFixed(0)}`
+        : `x${(currentZoom / 1000).toFixed(1)}K`;
+
+      ctx.fillStyle = 'rgba(17, 23, 56, 0.7)';
+      ctx.fillRect(0, 0, w, 30);
+      ctx.fillStyle = '#66bb6a';
+      ctx.font = 'bold 13px JetBrains Mono, monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(`ZOOM: ${zoomLabel}`, 12, 20);
+      ctx.fillStyle = '#9fa8da';
+      ctx.font = '11px Inter';
+      ctx.textAlign = 'right';
+      ctx.fillText(`Iteraciones: ${dynamicIter} | Centro: (${cx.toFixed(6)}, ${cy.toFixed(6)}i)`, w - 12, 20);
+
+      if (infoEl) infoEl.textContent = `Zoom ${zoomLabel} — Auto-similitud infinita`;
+      if (statsEl) statsEl.textContent = `Iteraciones: ${dynamicIter} — El patrón se repite sin importar cuánto nos acerquemos`;
+
+      if (currentZoom < maxZoom) {
+        buildAnimId = requestAnimationFrame(zoomFrame);
+      } else {
+        // Reset after reaching max zoom
+        buildTimeoutId = setTimeout(() => {
+          if (currentSlide === 13) {
+            currentRow = 0;
+            totalInSet = 0;
+            totalEscaped = 0;
+            ctx.fillStyle = '#111738';
+            ctx.fillRect(0, 0, w, h);
+            if (infoEl) infoEl.textContent = 'Reiniciando construcción...';
+            if (statsEl) statsEl.textContent = '';
+            buildAnimId = requestAnimationFrame(renderRows);
+          }
+        }, 2500);
+      }
+    }
+
+    buildAnimId = requestAnimationFrame(zoomFrame);
+  }
+
+  // Start phase 1
   buildAnimId = requestAnimationFrame(renderRows);
 }
 
