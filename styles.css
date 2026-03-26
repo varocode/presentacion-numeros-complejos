@@ -288,7 +288,14 @@ body {
   padding: 40px;
 }
 
-.cover-university { margin-bottom: 40px; }
+.cover-university { margin-bottom: 30px; }
+
+.uni-logo {
+  height: 100px;
+  width: auto;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 2px 12px rgba(92, 107, 192, 0.3));
+}
 
 .uni-badge {
   display: inline-block;
