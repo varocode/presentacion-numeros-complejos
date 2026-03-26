@@ -73,10 +73,11 @@ function triggerCanvases(index) {
     if (index === 9) initOpsCalculator();
     if (index === 11) drawFFTWave();
     if (index === 12) drawMandelbrot();
-    if (index === 13) drawCryptoDemo();
-    if (index === 15) drawRotation();
-    if (index === 17) drawQAMDemo();
-    if (index === 18) drawControlDemo();
+    if (index === 13) drawMandelbrotBuild();
+    if (index === 14) drawCryptoDemo();
+    if (index === 16) drawRotation();
+    if (index === 18) drawQAMDemo();
+    if (index === 19) drawControlDemo();
   }, 400);
 }
 
@@ -579,7 +580,7 @@ function drawRotation() {
     ctx.fillText('Im', cx + 15, 15);
 
     angle += 0.008;
-    if (currentSlide === 15) {
+    if (currentSlide === 16) {
       rotationAnimId = requestAnimationFrame(animate);
     }
   }
@@ -589,6 +590,101 @@ function drawRotation() {
 
 // ============================================
 // CANVAS: FFT Wave Decomposition (Slide 11)
+// ============================================
+// CANVAS: Mandelbrot Progressive Build (Slide 13)
+// ============================================
+let buildAnimId = null;
+
+function drawMandelbrotBuild() {
+  const canvas = document.getElementById('mandelbrotBuildCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const maxIter = 80;
+
+  if (buildAnimId) cancelAnimationFrame(buildAnimId);
+
+  // Clear canvas
+  ctx.fillStyle = '#111738';
+  ctx.fillRect(0, 0, w, h);
+
+  const infoEl = document.getElementById('buildProgress');
+  const statsEl = document.getElementById('buildStats');
+
+  let currentRow = 0;
+  const rowsPerFrame = 3; // render N rows per frame for visible speed
+  let totalInSet = 0;
+  let totalEscaped = 0;
+
+  function renderRows() {
+    if (currentSlide !== 13) return;
+
+    for (let batch = 0; batch < rowsPerFrame && currentRow < h; batch++, currentRow++) {
+      for (let px = 0; px < w; px++) {
+        const x0 = (px - w * 0.65) / (w * 0.25);
+        const y0 = (currentRow - h * 0.5) / (h * 0.4);
+        let x = 0, y = 0, iter = 0;
+
+        while (x * x + y * y <= 4 && iter < maxIter) {
+          const xtemp = x * x - y * y + x0;
+          y = 2 * x * y + y0;
+          x = xtemp;
+          iter++;
+        }
+
+        if (iter === maxIter) {
+          ctx.fillStyle = '#0a0e27';
+          totalInSet++;
+        } else {
+          const t = iter / maxIter;
+          const r = Math.min(255, Math.floor(9 * (1 - t) * t * t * t * 255) + 40);
+          const g = Math.min(255, Math.floor(15 * (1 - t) * (1 - t) * t * t * 255) + 50);
+          const b = Math.min(255, Math.floor(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255) + 180);
+          ctx.fillStyle = `rgb(${r},${g},${b})`;
+          totalEscaped++;
+        }
+        ctx.fillRect(px, currentRow, 1, 1);
+      }
+    }
+
+    // Update progress info
+    const pct = Math.round((currentRow / h) * 100);
+    if (infoEl) infoEl.textContent = currentRow < h
+      ? `Construyendo... ${pct}% — Fila ${currentRow} de ${h}`
+      : `Completado — ${h} filas renderizadas`;
+    if (statsEl) statsEl.textContent = `En el conjunto: ${totalInSet.toLocaleString()} px | Escaparon: ${totalEscaped.toLocaleString()} px`;
+
+    // Draw scan line
+    if (currentRow < h) {
+      ctx.strokeStyle = 'rgba(239, 83, 80, 0.6)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, currentRow);
+      ctx.lineTo(w, currentRow);
+      ctx.stroke();
+
+      buildAnimId = requestAnimationFrame(renderRows);
+    } else {
+      // Completed — wait and restart
+      setTimeout(() => {
+        if (currentSlide === 13) {
+          currentRow = 0;
+          totalInSet = 0;
+          totalEscaped = 0;
+          ctx.fillStyle = '#111738';
+          ctx.fillRect(0, 0, w, h);
+          buildAnimId = requestAnimationFrame(renderRows);
+        }
+      }, 3000);
+    }
+  }
+
+  buildAnimId = requestAnimationFrame(renderRows);
+}
+
+// ============================================
+// CANVAS: FFT Wave (Slide 11 — unchanged index)
 // ============================================
 let fftAnimId = null;
 
@@ -891,7 +987,7 @@ function drawCryptoDemo() {
     ctx.textAlign = 'center';
     ctx.fillText('P\' = P · z(clave) → rotar + escalar', cx, h - 10);
 
-    if (currentSlide === 13) {
+    if (currentSlide === 14) {
       cryptoAnimId = requestAnimationFrame(animate);
     }
   }
@@ -1072,7 +1168,7 @@ function drawQAMDemo() {
     ctx.fillText(`Fase: ${(phase * 180 / Math.PI).toFixed(0)}°`, waveStartX + 8, infoY + 44);
 
     frameCount++;
-    if (currentSlide === 17) {
+    if (currentSlide === 18) {
       qamAnimId = requestAnimationFrame(animate);
     }
   }
@@ -1246,7 +1342,7 @@ function drawControlDemo() {
       trail = [];
     }
 
-    if (currentSlide === 18) {
+    if (currentSlide === 19) {
       controlAnimId = requestAnimationFrame(animate);
     }
   }

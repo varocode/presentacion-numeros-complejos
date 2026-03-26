@@ -18,7 +18,7 @@
     <button class="nav-btn" id="btnPrev" title="Anterior (←)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="slide-counter" id="slideCounter">1 / 23</span>
+    <span class="slide-counter" id="slideCounter">1 / 24</span>
     <button class="nav-btn" id="btnNext" title="Siguiente (→)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
@@ -548,7 +548,43 @@ z = 3 + 4j
       </div>
     </section>
 
-    <!-- SLIDE 13: Criptografía -->
+    <!-- SLIDE 13: Construcción del Mandelbrot -->
+    <section class="slide" data-title="Construyendo el Mandelbrot" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Demo en Vivo</div>
+        <h2 class="slide-title">Construyendo el Conjunto de Mandelbrot</h2>
+        <div class="mandelbrot-build-layout">
+          <div class="mandelbrot-build-center">
+            <canvas id="mandelbrotBuildCanvas" width="580" height="420"></canvas>
+            <div class="mandelbrot-build-info" id="mandelbrotBuildInfo">
+              <span id="buildProgress">Esperando...</span>
+              <span id="buildStats"></span>
+            </div>
+          </div>
+          <div class="mandelbrot-build-legend reveal-item">
+            <div class="build-step-card">
+              <span class="build-step-num">1</span>
+              <p>Para cada píxel, tomamos su coordenada como número complejo <strong>c</strong></p>
+            </div>
+            <div class="build-step-card">
+              <span class="build-step-num">2</span>
+              <p>Repetimos <strong>z = z² + c</strong> hasta 80 veces</p>
+            </div>
+            <div class="build-step-card">
+              <span class="build-step-num">3</span>
+              <p>Si |z| > 2 → <span style="color:#ef5350">escapa</span> (color según iteraciones)</p>
+            </div>
+            <div class="build-step-card">
+              <span class="build-step-num">4</span>
+              <p>Si nunca escapa → <span style="color:#66bb6a">pertenece al conjunto</span> (negro)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: Criptografía -->
     <section class="slide" data-title="4.3 Criptografía y Seguridad" data-speaker="Alvaro Acevedo">
       <div class="slide-inner">
         <div class="speaker-badge">Alvaro Acevedo</div>
