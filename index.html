@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Números Complejos y su Aplicación en la Ingeniería de Software</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-controls">
+    <button class="nav-btn" id="btnPrev" title="Anterior (←)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="slide-counter" id="slideCounter">1 / 23</span>
+    <button class="nav-btn" id="btnNext" title="Siguiente (→)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="nav-btn" id="btnMenu" title="Índice (M)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <button class="nav-btn" id="btnFullscreen" title="Pantalla completa (F)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+    </button>
+  </nav>
+
+  <!-- Side Menu -->
+  <div class="side-menu" id="sideMenu">
+    <div class="menu-header">
+      <h3>Índice</h3>
+      <button class="menu-close" id="menuClose">&times;</button>
+    </div>
+    <ul class="menu-list" id="menuList"></ul>
+  </div>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- Slides Container -->
+  <div class="slides-container" id="slidesContainer">
+
+    <!-- SLIDE 0: Portada -->
+    <section class="slide slide-cover active" data-title="Portada">
+      <div class="cover-bg">
+        <div class="cover-particles" id="coverParticles"></div>
+      </div>
+      <div class="cover-content">
+        <div class="cover-university">
+          <div class="uni-badge">UNICARIBE</div>
+          <p>Universidad del Caribe &middot; Escuela de Tecnología</p>
+        </div>
+        <h1 class="cover-title">
+          <span class="title-accent">Números Complejos</span>
+          <span class="title-sub">y su Aplicación en la Ingeniería de Software</span>
+        </h1>
+        <div class="cover-meta">
+          <p class="cover-subject">Matemática Básica I &middot; Unidad 4</p>
+          <div class="cover-team">
+            <div class="team-member"><span class="team-dot"></span>Alvaro Acevedo</div>
+            <div class="team-member"><span class="team-dot"></span>Zeniff Carderon</div>
+            <div class="team-member"><span class="team-dot"></span>Julio Castillo</div>
+            <div class="team-member"><span class="team-dot"></span>Noe Carrion</div>
+          </div>
+          <p class="cover-prof">Docente: Fabio Evelin Ogando Gervacio</p>
+          <p class="cover-date">Santo Domingo, R.D. &mdash; Marzo 2026</p>
+        </div>
+        <div class="cover-arrow" onclick="goToSlide(1)">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 1: Agenda -->
+    <section class="slide" data-title="Agenda">
+      <div class="slide-inner">
+        <div class="section-label">Vista General</div>
+        <h2 class="slide-title">Agenda de la Presentación</h2>
+        <div class="agenda-grid">
+          <div class="agenda-card" onclick="goToSlide(2)">
+            <div class="agenda-num">01</div>
+            <div class="agenda-info">
+              <h4>Introducción y Justificación</h4>
+              <p>Contexto y relevancia del tema</p>
+              <span class="agenda-speaker">Zeniff Carderon</span>
+            </div>
+          </div>
+          <div class="agenda-card" onclick="goToSlide(4)">
+            <div class="agenda-num">02</div>
+            <div class="agenda-info">
+              <h4>Números Imaginarios y Unidad Imaginaria</h4>
+              <p>Fundamentos teóricos</p>
+              <span class="agenda-speaker">Zeniff Carderon</span>
+            </div>
+          </div>
+          <div class="agenda-card" onclick="goToSlide(7)">
+            <div class="agenda-num">03</div>
+            <div class="agenda-info">
+              <h4>Conjuntos y Operaciones Complejas</h4>
+              <p>Aritmética compleja y FFT</p>
+              <span class="agenda-speaker">Noe Carrion</span>
+            </div>
+          </div>
+          <div class="agenda-card" onclick="goToSlide(12)">
+            <div class="agenda-num">04</div>
+            <div class="agenda-info">
+              <h4>Fractales, Cripto, IA y Videojuegos</h4>
+              <p>Aplicaciones en software</p>
+              <span class="agenda-speaker">Alvaro Acevedo</span>
+            </div>
+          </div>
+          <div class="agenda-card" onclick="goToSlide(16)">
+            <div class="agenda-num">05</div>
+            <div class="agenda-info">
+              <h4>Telecom, Robótica y Cuántica</h4>
+              <p>Aplicaciones avanzadas</p>
+              <span class="agenda-speaker">Julio Castillo</span>
+            </div>
+          </div>
+          <div class="agenda-card" onclick="goToSlide(20)">
+            <div class="agenda-num">06</div>
+            <div class="agenda-info">
+              <h4>Conclusiones</h4>
+              <p>Síntesis y reflexiones</p>
+              <span class="agenda-speaker">Julio Castillo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Introducción -->
+    <section class="slide" data-title="Introducción" data-speaker="Zeniff Carderon">
+      <div class="slide-inner">
+        <div class="speaker-badge">Zeniff Carderon</div>
+        <div class="section-label">Sección 1</div>
+        <h2 class="slide-title">Introducción</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="highlight-box">
+                <p>Cuando escuchamos <strong>"números complejos"</strong>, puede sonar abstracto. Pero la realidad es que están detrás de tecnologías que usamos <em>todos los días</em>.</p>
+              </div>
+            </div>
+            <ul class="styled-list reveal-item">
+              <li><span class="list-icon">🎵</span>La música que escuchamos en Spotify</li>
+              <li><span class="list-icon">📸</span>Los filtros de Instagram</li>
+              <li><span class="list-icon">🎙️</span>Siri, Alexa y asistentes de voz</li>
+              <li><span class="list-icon">🎮</span>Los gráficos de los videojuegos</li>
+            </ul>
+            <div class="reveal-item">
+              <div class="callout-box">
+                <strong>Objetivo:</strong> Entender los números complejos y ver cómo se usan para construir software en la vida real.
+              </div>
+            </div>
+          </div>
+          <div class="col-visual">
+            <div class="app-hub">
+              <div class="hub-center">Números<br>Complejos</div>
+              <div class="hub-item hub-1">FFT / Audio<br><small>MP3, Spotify</small></div>
+              <div class="hub-item hub-2">Fractales<br><small>Mandelbrot</small></div>
+              <div class="hub-item hub-3">Criptografía<br><small>RSA, Cuántica</small></div>
+              <div class="hub-item hub-4">IA<br><small>Redes neuronales</small></div>
+              <div class="hub-item hub-5">Gráficos 2D/3D<br><small>Unity, Unreal</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Justificación -->
+    <section class="slide" data-title="Justificación" data-speaker="Zeniff Carderon">
+      <div class="slide-inner">
+        <div class="speaker-badge">Zeniff Carderon</div>
+        <div class="section-label">Sección 2</div>
+        <h2 class="slide-title">Justificación</h2>
+        <div class="cards-row">
+          <div class="info-card reveal-item">
+            <div class="card-icon">🎯</div>
+            <h4>¿En qué consiste?</h4>
+            <p>Investigación de la Unidad 4 (números complejos) con ejemplos y aplicaciones directas a la ingeniería de software. No es solo copiar definiciones, sino <strong>entender para qué sirven</strong>.</p>
+          </div>
+          <div class="info-card reveal-item">
+            <div class="card-icon">🎓</div>
+            <h4>Relevancia Académica</h4>
+            <p>Contextualizamos los números complejos dentro de problemas reales: procesamiento de señales, computación gráfica, seguridad informática.</p>
+          </div>
+          <div class="info-card reveal-item">
+            <div class="card-icon">🏢</div>
+            <h4>Importancia Industrial</h4>
+            <p>Empresas como <strong>Google, Apple, Meta, Spotify y Tesla</strong> utilizan algoritmos que dependen directamente de la aritmética de números complejos.</p>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="quote-box">
+            "Como futuros ingenieros de software, necesitamos saber que las matemáticas NO son algo separado de la programación."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Números Imaginarios -->
+    <section class="slide" data-title="3.1 Números Imaginarios" data-speaker="Zeniff Carderon">
+      <div class="slide-inner">
+        <div class="speaker-badge">Zeniff Carderon</div>
+        <div class="section-label">Tema 3.1</div>
+        <h2 class="slide-title">Los Números Imaginarios</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="problem-box">
+                <h4>El problema</h4>
+                <p>¿Qué pasa si intentamos resolver <strong>x² = −1</strong>?</p>
+                <p>No existe ningún número real cuyo cuadrado sea negativo.</p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="solution-box">
+                <h4>La solución</h4>
+                <p>Los matemáticos inventaron un nuevo tipo de número: los <strong>números imaginarios</strong>.</p>
+                <p>Forma: <code class="formula">bi</code> donde <em>b</em> es un número real e <em>i</em> es la "unidad imaginaria".</p>
+                <p class="examples">Ejemplos: <code>3i</code>, <code>−5i</code>, <code>0.7i</code></p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="callout-box">
+                <strong>En software:</strong> La Transformada de Fourier usa números imaginarios internamente. Sin ellos, no existiría el formato MP3 ni los asistentes de voz.
+              </div>
+            </div>
+          </div>
+          <div class="col-visual reveal-item">
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-lang">Python</span>
+              </div>
+              <pre><code><span class="code-comment"># En Python, se usa 'j' en vez de 'i'</span>
+z = 3 + 4j
+<span class="code-keyword">print</span>(z)        <span class="code-comment"># (3+4j)</span>
+<span class="code-keyword">print</span>(z.real)   <span class="code-comment"># 3.0</span>
+<span class="code-keyword">print</span>(z.imag)   <span class="code-comment"># 4.0</span></code></pre>
+            </div>
+            <div class="fun-fact">
+              <strong>Dato curioso:</strong> Los ingenieros eléctricos usan <em>j</em> en vez de <em>i</em> porque <em>i</em> ya se usa para la corriente. Por eso Python también usa <em>j</em>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Unidad Imaginaria -->
+    <section class="slide" data-title="3.2 La Unidad Imaginaria" data-speaker="Zeniff Carderon">
+      <div class="slide-inner">
+        <div class="speaker-badge">Zeniff Carderon</div>
+        <div class="section-label">Tema 3.2</div>
+        <h2 class="slide-title">La Unidad Imaginaria</h2>
+        <div class="formula-hero reveal-item">
+          <div class="formula-big">i = √(−1)</div>
+          <div class="formula-equiv">equivalentemente: i² = −1</div>
+        </div>
+        <div class="reveal-item">
+          <h3 class="subtitle">Ciclo de las potencias de <em>i</em> (se repite cada 4)</h3>
+        </div>
+        <div class="cycle-grid reveal-item">
+          <div class="cycle-card cycle-1">
+            <div class="cycle-power">i¹ = i</div>
+            <div class="cycle-angle">90° rotación</div>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-card cycle-2">
+            <div class="cycle-power">i² = −1</div>
+            <div class="cycle-angle">180° rotación</div>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-card cycle-3">
+            <div class="cycle-power">i³ = −i</div>
+            <div class="cycle-angle">270° rotación</div>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-card cycle-4">
+            <div class="cycle-power">i⁴ = 1</div>
+            <div class="cycle-angle">360° = vuelta</div>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="callout-box">
+            <strong>En gráficos:</strong> Multiplicar un punto por <em>i</em> equivale a rotarlo 90° en la pantalla. Esto se usa en motores gráficos 2D, herramientas CAD y animaciones.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Transición Desarrollo -->
+    <section class="slide slide-transition" data-title="— Desarrollo Teórico">
+      <div class="transition-content">
+        <div class="transition-number">Parte II</div>
+        <h2 class="transition-title">Conjuntos y Operaciones<br>con Números Complejos</h2>
+        <p class="transition-sub">Ahora que conocemos los imaginarios, veamos cómo se combinan con los reales</p>
+        <div class="transition-speaker">Expone: Noe Carrion</div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Conjuntos de Números Complejos -->
+    <section class="slide" data-title="3.3 Conjuntos de Números Complejos" data-speaker="Noe Carrion">
+      <div class="slide-inner">
+        <div class="speaker-badge">Noe Carrion</div>
+        <div class="section-label">Tema 3.3</div>
+        <h2 class="slide-title">Conjuntos de Números Complejos (a + bi)</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="formula-hero small reveal-item">
+              <div class="formula-big">z = a + bi</div>
+              <div class="formula-equiv"><em>a</em> = parte real &nbsp;|&nbsp; <em>b</em> = parte imaginaria</div>
+            </div>
+            <ul class="styled-list reveal-item">
+              <li>El conjunto de todos los números complejos se llama <strong>ℂ</strong></li>
+              <li>Los complejos <strong>incluyen</strong> a todos los demás conjuntos numéricos</li>
+              <li>El número 5 es complejo: <code>5 + 0i</code></li>
+              <li>El número 3i también es complejo: <code>0 + 3i</code></li>
+            </ul>
+            <div class="reveal-item">
+              <h4>Formas de escribir un número complejo:</h4>
+              <div class="forms-list">
+                <div class="form-item"><strong>Rectangular:</strong> <code>z = a + bi</code> (la más común)</div>
+                <div class="form-item"><strong>Polar:</strong> <code>z = r(cosθ + i·senθ)</code></div>
+                <div class="form-item"><strong>Exponencial:</strong> <code>z = r·e^(iθ)</code> — la que usa la FFT</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-visual reveal-item">
+            <div class="complex-plane">
+              <div class="plane-title">Plano Complejo Interactivo</div>
+              <div class="interactive-inputs">
+                <label>a = <input type="number" id="planeInputA" value="3" step="0.5" min="-3.5" max="3.5" oninput="onPlaneInputChange()"></label>
+                <span class="input-plus">+</span>
+                <label><input type="number" id="planeInputB" value="2" step="0.5" min="-3" max="3" oninput="onPlaneInputChange()"> i</label>
+              </div>
+              <canvas id="complexPlane" width="380" height="340"></canvas>
+              <div class="plane-info" id="planeInfo"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Operaciones y Propiedades -->
+    <section class="slide" data-title="3.4 Operaciones con Números Complejos" data-speaker="Noe Carrion">
+      <div class="slide-inner">
+        <div class="speaker-badge">Noe Carrion</div>
+        <div class="section-label">Tema 3.4</div>
+        <h2 class="slide-title">Operaciones y Propiedades</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <h3 class="subtitle">Propiedades (como los reales)</h3>
+              <ul class="styled-list compact">
+                <li><strong>Conmutativa:</strong> z₁ + z₂ = z₂ + z₁</li>
+                <li><strong>Asociativa:</strong> (z₁ + z₂) + z₃ = z₁ + (z₂ + z₃)</li>
+                <li><strong>Distributiva:</strong> z₁ · (z₂ + z₃) = z₁·z₂ + z₁·z₃</li>
+                <li><strong>Elemento neutro:</strong> 0 para suma, 1 para multiplicación</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-text">
+            <div class="reveal-item">
+              <h3 class="subtitle">Operaciones clave</h3>
+              <div class="ops-cards">
+                <div class="op-card">
+                  <h5>Conjugado</h5>
+                  <code>z̄ = a − bi</code>
+                  <p>Se "flipea" el signo de la parte imaginaria</p>
+                </div>
+                <div class="op-card">
+                  <h5>Módulo</h5>
+                  <code>|z| = √(a² + b²)</code>
+                  <p>Distancia al origen. En la FFT = amplitud</p>
+                </div>
+                <div class="op-card">
+                  <h5>Argumento</h5>
+                  <code>θ = arctan(b/a)</code>
+                  <p>El ángulo. En la FFT = fase de la señal</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Suma, Resta, Multiplicación, División -->
+    <section class="slide" data-title="3.5 Suma, Resta, Multiplicación y División" data-speaker="Noe Carrion">
+      <div class="slide-inner">
+        <div class="speaker-badge">Noe Carrion</div>
+        <div class="section-label">Tema 3.5</div>
+        <h2 class="slide-title">Suma, Resta, Multiplicación y División</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="ops-grid-compact">
+              <div class="op-big-card sum reveal-item">
+                <h4>➕ Suma</h4>
+                <div class="op-formula">(a+bi) + (c+di) = <strong>(a+c) + (b+d)i</strong></div>
+                <div class="op-result">= <span id="resultSum">4 + 7i</span></div>
+              </div>
+              <div class="op-big-card sub reveal-item">
+                <h4>➖ Resta</h4>
+                <div class="op-formula">(a+bi) − (c+di) = <strong>(a−c) + (b−d)i</strong></div>
+                <div class="op-result">= <span id="resultSub">2 − 3i</span></div>
+              </div>
+              <div class="op-big-card mul reveal-item">
+                <h4>✖️ Multiplicación</h4>
+                <div class="op-formula">(ac−bd) + (ad+bc)i</div>
+                <div class="op-result">= <span id="resultMul">−1 + 22i</span></div>
+              </div>
+              <div class="op-big-card div reveal-item">
+                <h4>➗ División</h4>
+                <div class="op-formula">Multiplicar por conjugado</div>
+                <div class="op-result">= <span id="resultDiv">0.68 + 0.16i</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="calc-panel">
+                <h4 class="calc-title">Calculadora Interactiva</h4>
+                <div class="calc-row">
+                  <span class="calc-label">z₁ =</span>
+                  <input type="number" id="opsA1" value="3" step="1" class="calc-input">
+                  <span class="calc-op">+</span>
+                  <input type="number" id="opsB1" value="5" step="1" class="calc-input">
+                  <span class="calc-i">i</span>
+                </div>
+                <div class="calc-row">
+                  <span class="calc-label">z₂ =</span>
+                  <input type="number" id="opsA2" value="1" step="1" class="calc-input">
+                  <span class="calc-op">+</span>
+                  <input type="number" id="opsB2" value="2" step="1" class="calc-input">
+                  <span class="calc-i">i</span>
+                </div>
+                <p class="calc-hint">Cambia los valores y mira los resultados actualizarse en tiempo real</p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="callout-box">
+                <strong>¿Dónde se usan?</strong> La multiplicación compleja es el corazón de la FFT y los fractales. La suma se usa en superposición de señales.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Transición Aplicaciones -->
+    <section class="slide slide-transition" data-title="— Aplicaciones en Ing. de Software">
+      <div class="transition-content">
+        <div class="transition-number">Parte III</div>
+        <h2 class="transition-title">Aplicaciones en la<br>Ingeniería de Software</h2>
+        <p class="transition-sub">Ahora viene lo bueno: cómo los números complejos se aplican en el mundo real del software</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: FFT -->
+    <section class="slide" data-title="4.1 Transformada Rápida de Fourier (FFT)" data-speaker="Noe Carrion">
+      <div class="slide-inner">
+        <div class="speaker-badge">Noe Carrion</div>
+        <div class="section-label">Tema 4.1</div>
+        <h2 class="slide-title">Transformada Rápida de Fourier (FFT)</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="highlight-box">
+                <p>La FFT toma una señal (como una grabación de audio) y la descompone en las frecuencias que la forman. <strong>Es como separar los instrumentos de una canción.</strong></p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <h3 class="subtitle">¿Dónde se usa?</h3>
+              <ul class="styled-list">
+                <li><span class="list-icon">🎵</span><strong>MP3 / AAC:</strong> Elimina frecuencias inaudibles</li>
+                <li><span class="list-icon">🎙️</span><strong>Siri / Alexa:</strong> Descomponen la voz en frecuencias</li>
+                <li><span class="list-icon">📷</span><strong>JPEG:</strong> Usa variante de FFT para comprimir fotos</li>
+                <li><span class="list-icon">🎧</span><strong>Ecualizadores:</strong> Ajustan frecuencias específicas</li>
+                <li><span class="list-icon">🔍</span><strong>Shazam:</strong> Identifica canciones por patrones de frecuencia</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-visual">
+            <div class="canvas-demo reveal-item">
+              <canvas id="fftWaveCanvas" width="380" height="340"></canvas>
+              <p class="plane-caption">Señal = suma de ondas simples → FFT las separa</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 12: Fractales / Mandelbrot -->
+    <section class="slide" data-title="4.2 Fractales: Conjunto de Mandelbrot" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Tema 4.2</div>
+        <h2 class="slide-title">Fractales: El Conjunto de Mandelbrot</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="formula-hero small reveal-item">
+              <div class="formula-big">z(n+1) = z(n)² + c</div>
+              <div class="formula-equiv">donde z y c son números complejos</div>
+            </div>
+            <div class="reveal-item">
+              <div class="steps-list">
+                <div class="step-item">
+                  <span class="step-num">1</span>
+                  <p>Para cada punto <em>c</em> del plano complejo, se repite la fórmula</p>
+                </div>
+                <div class="step-item">
+                  <span class="step-num">2</span>
+                  <p>Si |z| no supera 2, el punto pertenece al conjunto (se pinta negro)</p>
+                </div>
+                <div class="step-item">
+                  <span class="step-num">3</span>
+                  <p>Los demás se colorean según cuántas iteraciones tardó en escapar</p>
+                </div>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <h3 class="subtitle">¿Dónde se usa en software?</h3>
+              <ul class="styled-list compact">
+                <li><strong>No Man's Sky:</strong> Genera planetas y terrenos infinitos</li>
+                <li><strong>Arte generativo:</strong> Patrones únicos e impresionantes</li>
+                <li><strong>Compresión fractal:</strong> Reduce tamaño de archivos</li>
+                <li><strong>Antenas:</strong> Curva de Hilbert en celulares</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-visual reveal-item">
+            <div class="mandelbrot-container">
+              <canvas id="mandelbrotCanvas" width="380" height="340"></canvas>
+              <p class="plane-caption">Hacé click en cualquier punto para ver las iteraciones</p>
+              <div class="mandelbrot-info" id="mandelbrotInfo">
+                <small style="color:var(--text-dim)">Click en el fractal para explorar...</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 13: Criptografía -->
+    <section class="slide" data-title="4.3 Criptografía y Seguridad" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Tema 4.3</div>
+        <h2 class="slide-title">Criptografía y Seguridad Informática</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="highlight-box">
+                <p>La criptografía moderna protege contraseñas, transacciones bancarias y comunicaciones. La <strong>computación cuántica</strong> está cambiando las reglas del juego.</p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="steps-list">
+                <div class="step-item warning">
+                  <span class="step-num">!</span>
+                  <p>El <strong>algoritmo de Shor</strong> (cuántico) puede romper RSA usando la Transformada Cuántica de Fourier, que trabaja con números complejos.</p>
+                </div>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="callout-box">
+                <strong>Para ingenieros de software:</strong> Necesitarán entender matemática compleja para diseñar sistemas seguros ante las amenazas cuánticas.
+              </div>
+            </div>
+          </div>
+          <div class="col-visual">
+            <div class="canvas-demo reveal-item">
+              <canvas id="cryptoCanvas" width="380" height="300"></canvas>
+              <p class="plane-caption">Multiplicar por z(clave) = rotar + escalar = encriptar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 14: Inteligencia Artificial -->
+    <section class="slide" data-title="4.4 Inteligencia Artificial" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Tema 4.4</div>
+        <h2 class="slide-title">Inteligencia Artificial</h2>
+        <div class="slide-image wide reveal-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Artificial_Neural_Network_with_Chip.jpg" alt="Red neuronal artificial con chip" onerror="this.parentElement.classList.add('img-fallback')">
+          <div class="img-fallback-content">Redes Neuronales Artificiales</div>
+          <div class="img-overlay-label">Las redes neuronales complejas usan aritmética de números complejos</div>
+        </div>
+        <div class="cards-row two-cards">
+          <div class="info-card large reveal-item">
+            <div class="card-icon">🧠</div>
+            <h4>Redes Neuronales Complejas</h4>
+            <p><strong>Complex-Valued Neural Networks:</strong> Usan pesos y activaciones como números complejos.</p>
+            <ul class="inner-list">
+              <li>Especialmente buenas procesando señales de <strong>radar, sonar y comunicaciones</strong></li>
+              <li>Capturan información de fase que las redes reales pierden</li>
+            </ul>
+          </div>
+          <div class="info-card large reveal-item">
+            <div class="card-icon">🎙️</div>
+            <h4>Preprocesamiento de Audio</h4>
+            <p>Antes de que un modelo de IA pueda "escuchar" tu voz:</p>
+            <ul class="inner-list">
+              <li>La señal de audio se transforma con la <strong>FFT</strong> (números complejos)</li>
+              <li>Se extraen las frecuencias</li>
+              <li><strong>Sin este paso, los asistentes de voz NO funcionarían</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="flow-simple">
+            <span class="flow-step">🎤 Voz</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step accent">FFT (ℂ)</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Frecuencias</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">🤖 Modelo IA</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">💬 Respuesta</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 15: Videojuegos y Gráficos 2D/3D -->
+    <section class="slide" data-title="4.5 Videojuegos y Gráficos 2D/3D" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Tema 4.5</div>
+        <h2 class="slide-title">Videojuegos y Gráficos 2D/3D</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="highlight-box">
+                <p>Un punto en pantalla tiene coordenadas (x, y). Un número complejo <code>a + bi</code> también tiene dos componentes. <strong>¡Son equivalentes!</strong></p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <div class="compare-cards">
+                <div class="compare-card">
+                  <h5>Gráficos 2D</h5>
+                  <ul>
+                    <li>Rotaciones: z · e^(iθ)</li>
+                    <li>Escalado: z · r</li>
+                    <li>Traslación: z + w</li>
+                    <li>Reflexión: conjugado z̄</li>
+                  </ul>
+                  <p class="compare-used"><strong>Usado en:</strong> Canvas HTML5, SVG, juegos 2D, Figma</p>
+                </div>
+                <div class="compare-card accent">
+                  <h5>Gráficos 3D (Quaterniones)</h5>
+                  <ul>
+                    <li>Extensión de complejos a 3D/4D</li>
+                    <li>q = a + bi + cj + dk</li>
+                    <li>Evitan "gimbal lock"</li>
+                  </ul>
+                  <p class="compare-used"><strong>Usado en:</strong> Unity, Unreal, Blender, Meta Quest, drones</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-visual reveal-item">
+            <div class="rotation-demo">
+              <canvas id="rotationCanvas" width="350" height="350"></canvas>
+              <p class="plane-caption">Multiplicar por e^(iθ) rota el punto θ grados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 16: Transición -->
+    <section class="slide slide-transition" data-title="— Aplicaciones Avanzadas">
+      <div class="transition-content">
+        <div class="transition-number">Parte IV</div>
+        <h2 class="transition-title">Telecomunicaciones,<br>Robótica y Cuántica</h2>
+        <p class="transition-sub">Aplicaciones avanzadas que están definiendo el futuro de la tecnología</p>
+        <div class="transition-speaker">Expone: Julio Castillo</div>
+      </div>
+    </section>
+
+    <!-- SLIDE 17: Telecomunicaciones -->
+    <section class="slide" data-title="4.6 Telecomunicaciones y Redes" data-speaker="Julio Castillo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Julio Castillo</div>
+        <div class="section-label">Tema 4.6</div>
+        <h2 class="slide-title">Telecomunicaciones y Redes</h2>
+        <div class="slide-image wide short reveal-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Tour_t%C3%A9l%C3%A9communication_1230_boulevard_Louis-XIV.jpg" alt="Torre de telecomunicaciones" onerror="this.parentElement.classList.add('img-fallback')">
+          <div class="img-fallback-content">Telecomunicaciones</div>
+          <div class="img-overlay-label">Las señales 5G, WiFi y Bluetooth se describen matemáticamente con números complejos</div>
+        </div>
+        <div class="reveal-item">
+          <div class="highlight-box">
+            <p>Cada vez que enviás un mensaje de WhatsApp, hacés una videollamada o ves un video en YouTube, los datos viajan como <strong>ondas electromagnéticas</strong> descritas con números complejos.</p>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="telecom-flow">
+            <div class="telecom-step">
+              <div class="telecom-icon">📡</div>
+              <h5>Señal 5G/WiFi</h5>
+              <small>Onda compleja</small>
+            </div>
+            <div class="telecom-arrow">→</div>
+            <div class="telecom-step accent">
+              <div class="telecom-icon">⚙️</div>
+              <h5>Modulación QAM/OFDM</h5>
+              <small>a + bi → amplitud + fase</small>
+            </div>
+            <div class="telecom-arrow">→</div>
+            <div class="telecom-step">
+              <div class="telecom-icon">💻</div>
+              <h5>Software: FFT inversa</h5>
+              <small>Decodificación digital</small>
+            </div>
+            <div class="telecom-arrow">→</div>
+            <div class="telecom-step">
+              <div class="telecom-icon">📱</div>
+              <h5>Tu App</h5>
+              <small>Datos listos</small>
+            </div>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="tech-tags">
+            <span class="tech-tag">WiFi 6</span>
+            <span class="tech-tag">5G</span>
+            <span class="tech-tag">Bluetooth</span>
+            <span class="tech-tag">GPS</span>
+            <span class="tech-tag">Netflix</span>
+            <span class="tech-tag">YouTube</span>
+            <span class="tech-tag">Zoom</span>
+            <span class="tech-tag">WhatsApp</span>
+            <span class="tech-tag">IoT</span>
+          </div>
+        </div>
+        <div class="canvas-demo canvas-demo-wide reveal-item">
+          <canvas id="qamCanvas" width="700" height="280"></canvas>
+          <p class="plane-caption">Cada punto = un número complejo = datos digitales</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 18: Robótica -->
+    <section class="slide" data-title="4.7 Robótica y Sistemas de Control" data-speaker="Julio Castillo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Julio Castillo</div>
+        <div class="section-label">Tema 4.7</div>
+        <h2 class="slide-title">Robótica y Sistemas de Control</h2>
+        <div class="two-col">
+          <div class="col-text">
+            <div class="reveal-item">
+              <div class="highlight-box">
+                <p>La <strong>Transformada de Laplace</strong> convierte ecuaciones diferenciales (difíciles) en ecuaciones algebraicas con números complejos (más fáciles).</p>
+              </div>
+            </div>
+            <div class="reveal-item">
+              <p>Los ingenieros analizan dónde caen los <strong>"polos" y "ceros"</strong> del sistema en el plano complejo para determinar si es estable.</p>
+            </div>
+            <div class="reveal-item">
+              <h3 class="subtitle">¿Dónde se aplica?</h3>
+              <ul class="styled-list compact">
+                <li><strong>Drones y robots:</strong> Software de vuelo (PX4, ArduPilot) usa controladores PID diseñados en el plano complejo</li>
+                <li><strong>Tesla, Waymo:</strong> Sistemas de control para carros autónomos</li>
+                <li><strong>MATLAB/Simulink:</strong> Modela sistemas con polos y ceros complejos</li>
+                <li><strong>Física de juegos:</strong> Amortiguación y oscilaciones se resuelven con raíces complejas</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-visual">
+            <div class="slide-image compact reveal-item">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Lexington_Medical%2C_Inc._Manufacturing_Robot_Arm.jpg" alt="Brazo robótico industrial" onerror="this.parentElement.classList.add('img-fallback')">
+              <div class="img-fallback-content">Robótica Industrial</div>
+            </div>
+            <div class="canvas-demo reveal-item">
+              <canvas id="controlCanvas" width="380" height="280"></canvas>
+              <p class="plane-caption">Respuesta del sistema: polos complejos = oscilación que se estabiliza</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 19: Computación Cuántica -->
+    <section class="slide" data-title="4.8 Computación Cuántica" data-speaker="Julio Castillo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Julio Castillo</div>
+        <div class="section-label">Tema 4.8</div>
+        <h2 class="slide-title">Computación Cuántica</h2>
+        <div class="slide-image wide short reveal-item">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/IBM_Quantum_System_One.jpg" alt="IBM Quantum System One" onerror="this.parentElement.classList.add('img-fallback')">
+          <div class="img-fallback-content">Computadora Cuántica IBM</div>
+          <div class="img-overlay-label">IBM Quantum System One: los qubits se representan con números complejos</div>
+        </div>
+        <div class="formula-hero small reveal-item">
+          <div class="formula-big">|ψ⟩ = α|0⟩ + β|1⟩</div>
+          <div class="formula-equiv">donde α y β son números COMPLEJOS que cumplen |α|² + |β|² = 1</div>
+        </div>
+        <div class="cards-row two-cards reveal-item">
+          <div class="info-card large">
+            <div class="card-icon">⚛️</div>
+            <h4>El Qubit</h4>
+            <p>Mientras un bit clásico es 0 o 1, un qubit puede ser <strong>superposición de ambos</strong>. Esta superposición se describe con números complejos.</p>
+          </div>
+          <div class="info-card large">
+            <div class="card-icon">🚀</div>
+            <h4>¿Por qué importa?</h4>
+            <ul class="inner-list">
+              <li><strong>Qiskit, Cirq, Q#:</strong> Requieren entender números complejos</li>
+              <li><strong>Criptografía post-cuántica:</strong> Nuevos algoritmos de encriptación</li>
+              <li><strong>Optimización:</strong> QAOA resuelve problemas complejos más rápido</li>
+              <li><strong>ML cuántico:</strong> Redes neuronales + circuitos cuánticos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="flow-simple">
+            <span class="flow-step">Qubit<br><small>α|0⟩ + β|1⟩</small></span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step accent">Puertas Cuánticas<br><small>Matrices de ℂ</small></span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">Resultado<br><small>Algoritmo de Shor, QFT</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 20: Tabla Resumen -->
+    <section class="slide" data-title="Tabla Resumen">
+      <div class="slide-inner">
+        <div class="section-label">Resumen</div>
+        <h2 class="slide-title">¿Dónde se usa cada operación?</h2>
+        <div class="table-wrapper reveal-item">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Operación</th>
+                <th>Se usa en...</th>
+                <th>Ejemplo real</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Suma / Resta</strong></td>
+                <td>Superposición de señales</td>
+                <td>Ecualizadores, filtros de audio</td>
+              </tr>
+              <tr>
+                <td><strong>Multiplicación</strong></td>
+                <td>FFT, fractales, rotaciones 2D</td>
+                <td>Mandelbrot, motores de juegos</td>
+              </tr>
+              <tr>
+                <td><strong>División</strong></td>
+                <td>Análisis de impedancia</td>
+                <td>Software embebido, IoT</td>
+              </tr>
+              <tr>
+                <td><strong>Módulo |z|</strong></td>
+                <td>Espectro de frecuencias</td>
+                <td>MP3, Shazam, JPEG</td>
+              </tr>
+              <tr>
+                <td><strong>Conjugado</strong></td>
+                <td>Correlación de señales, división</td>
+                <td>GPS, reconocimiento de patrones</td>
+              </tr>
+              <tr>
+                <td><strong>Exp. compleja</strong></td>
+                <td>FFT, modulación, rotaciones</td>
+                <td>Siri, Alexa, WiFi, 5G</td>
+              </tr>
+              <tr>
+                <td><strong>Quaterniones</strong></td>
+                <td>Rotaciones 3D</td>
+                <td>Unity, Unreal, VR, drones</td>
+              </tr>
+              <tr>
+                <td><strong>Matrices complejas</strong></td>
+                <td>Puertas cuánticas, control</td>
+                <td>Qiskit, PID, carros autónomos</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 21: Conclusiones -->
+    <section class="slide" data-title="Conclusiones" data-speaker="Julio Castillo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Julio Castillo</div>
+        <div class="section-label">Cierre</div>
+        <h2 class="slide-title">Conclusiones</h2>
+        <div class="conclusions-grid">
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">1</span>
+            <p>Los números complejos <strong>no son un invento "inútil"</strong>. Son la base matemática de tecnologías que usamos todos los días.</p>
+          </div>
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">2</span>
+            <p>La <strong>FFT</strong> es quizás el algoritmo más importante del procesamiento digital. Sin ella no existirían MP3, JPEG ni reconocimiento de voz.</p>
+          </div>
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">3</span>
+            <p>Los <strong>fractales</strong> demuestran que una simple fórmula compleja (z² + c) puede generar gráficos infinitamente complejos.</p>
+          </div>
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">4</span>
+            <p>Las <strong>rotaciones 2D y 3D</strong> (quaterniones) que usan todos los motores de videojuegos son extensiones de la multiplicación compleja.</p>
+          </div>
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">5</span>
+            <p>Las <strong>telecomunicaciones modernas</strong> (WiFi, 5G, GPS, streaming) dependen de la modulación con aritmética compleja.</p>
+          </div>
+          <div class="conclusion-card reveal-item">
+            <span class="conc-num">6</span>
+            <p>La <strong>computación cuántica</strong>, el futuro de la tecnología, está completamente construida sobre números complejos.</p>
+          </div>
+        </div>
+        <div class="reveal-item">
+          <div class="quote-box">
+            "Como futuros ingenieros de software, entender las matemáticas detrás del código nos permite no solo usar herramientas, sino crear y optimizar las nuestras."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 22: Preguntas -->
+    <section class="slide slide-end" data-title="Preguntas">
+      <div class="end-content">
+        <div class="end-icon">💡</div>
+        <h2 class="end-title">¿Preguntas?</h2>
+        <p class="end-sub">Gracias por su atención</p>
+        <div class="end-team">
+          <div class="end-member">Alvaro Acevedo</div>
+          <div class="end-member">Zeniff Carderon</div>
+          <div class="end-member">Julio Castillo</div>
+          <div class="end-member">Noe Carrion</div>
+        </div>
+        <div class="end-info">
+          <p>Matemática Básica I &middot; UNICARIBE &middot; Marzo 2026</p>
+          <p>Docente: Fabio Evelin Ogando Gervacio</p>
+        </div>
+        <button class="btn-home" onclick="goToSlide(0)">Ir al Inicio</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Keyboard hints -->
+  <div class="keyboard-hints" id="keyboardHints">
+    <span>← → Navegar</span>
+    <span>M Menú</span>
+    <span>F Fullscreen</span>
+    <span>H Ocultar</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
