@@ -705,13 +705,13 @@ function drawMandelbrotBuild() {
   // ============================
   // PHASE 2: Infinite zoom
   // ============================
-  // Zoom target: Seahorse Valley (beautiful boundary detail)
-  const zoomTargetX = -0.743643887037158;
-  const zoomTargetY = 0.131825904205311;
+  // Zoom target: boundary of a mini-bulb "patita" (always colorful, never stuck in black)
+  const zoomTargetX = -0.7463;
+  const zoomTargetY = 0.1102;
 
   let currentZoom = 1;
-  const zoomSpeed = 1.012; // smooth exponential zoom
-  const maxZoom = 50000;
+  const zoomSpeed = 1.015; // slightly faster for more impact
+  const maxZoom = 80000;
 
   function startZoomPhase() {
     currentZoom = 1;
@@ -724,8 +724,8 @@ function drawMandelbrotBuild() {
       // Increase iterations with zoom for better detail
       const dynamicIter = Math.min(300, Math.floor(80 + Math.log2(currentZoom) * 20));
 
-      // Interpolate center from initial view to target
-      const t = Math.min(1, Math.log(currentZoom) / Math.log(200));
+      // Interpolate center from initial view to target (fast — reach target by zoom x20)
+      const t = Math.min(1, Math.log(currentZoom) / Math.log(20));
       const cx = initCx + (zoomTargetX - initCx) * t;
       const cy = initCy + (zoomTargetY - initCy) * t;
 
