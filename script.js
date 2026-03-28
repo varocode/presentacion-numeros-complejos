@@ -595,6 +595,7 @@ function drawRotation() {
 // ============================================
 let buildAnimId = null;
 let buildTimeoutId = null;
+let mbInteractiveCleanup = null;
 
 function drawMandelbrotBuild() {
   const canvas = document.getElementById('mandelbrotBuildCanvas');
@@ -605,6 +606,7 @@ function drawMandelbrotBuild() {
 
   if (buildAnimId) cancelAnimationFrame(buildAnimId);
   if (buildTimeoutId) clearTimeout(buildTimeoutId);
+  if (mbInteractiveCleanup) { mbInteractiveCleanup(); mbInteractiveCleanup = null; }
 
   ctx.fillStyle = '#111738';
   ctx.fillRect(0, 0, w, h);
@@ -650,6 +652,26 @@ function drawMandelbrotBuild() {
     ctx.putImageData(imageData, 0, 0);
   }
 
+  // --- Draw zoom HUD overlay ---
+  function drawHUD(centerX, centerY, zoom, maxIter) {
+    const zoomLabel = zoom < 1000
+      ? `x${zoom.toFixed(0)}`
+      : zoom < 1000000
+        ? `x${(zoom / 1000).toFixed(1)}K`
+        : `x${(zoom / 1000000).toFixed(2)}M`;
+
+    ctx.fillStyle = 'rgba(17, 23, 56, 0.75)';
+    ctx.fillRect(0, 0, w, 30);
+    ctx.fillStyle = '#66bb6a';
+    ctx.font = 'bold 13px JetBrains Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`ZOOM: ${zoomLabel}`, 12, 20);
+    ctx.fillStyle = '#9fa8da';
+    ctx.font = '11px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(`Iter: ${maxIter} | Centro: (${centerX.toFixed(6)}, ${centerY.toFixed(6)}i)`, w - 12, 20);
+  }
+
   // ============================
   // PHASE 1: Progressive build
   // ============================
@@ -658,7 +680,6 @@ function drawMandelbrotBuild() {
   let totalInSet = 0;
   let totalEscaped = 0;
   const buildMaxIter = 80;
-  // Viewport for initial build
   const initCx = -0.5, initCy = 0;
   const initSpanX = 3.5, initSpanY = initSpanX * (h / w);
 
@@ -682,11 +703,10 @@ function drawMandelbrotBuild() {
     const pct = Math.round((currentRow / h) * 100);
     if (infoEl) infoEl.textContent = currentRow < h
       ? `Construyendo... ${pct}% — Fila ${currentRow} de ${h}`
-      : '✓ Construcción completa — Iniciando zoom infinito...';
+      : '✓ Construcción completa — ¡Explorá con scroll y click!';
     if (statsEl) statsEl.textContent = `En el conjunto: ${totalInSet.toLocaleString()} px | Escaparon: ${totalEscaped.toLocaleString()} px`;
 
     if (currentRow < h) {
-      // Scan line
       ctx.strokeStyle = 'rgba(239, 83, 80, 0.6)';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -695,81 +715,106 @@ function drawMandelbrotBuild() {
       ctx.stroke();
       buildAnimId = requestAnimationFrame(renderRows);
     } else {
-      // Phase 1 done — wait 2s then start zoom
+      // Phase 1 done — enable interactive zoom
       buildTimeoutId = setTimeout(() => {
-        if (currentSlide === 13) startZoomPhase();
-      }, 2000);
+        if (currentSlide === 13) enableInteractiveZoom();
+      }, 800);
     }
   }
 
   // ============================
-  // PHASE 2: Infinite zoom
+  // PHASE 2: Interactive zoom
   // ============================
-  // Zoom target: boundary of a mini-bulb "patita" (always colorful, never stuck in black)
-  const zoomTargetX = -0.7463;
-  const zoomTargetY = 0.1102;
+  function enableInteractiveZoom() {
+    let zoomCx = initCx;
+    let zoomCy = initCy;
+    let zoomLevel = 1;
 
-  let currentZoom = 1;
-  const zoomSpeed = 1.015; // slightly faster for more impact
-  const maxZoom = 80000;
-
-  function startZoomPhase() {
-    currentZoom = 1;
-
-    function zoomFrame() {
-      if (currentSlide !== 13) return;
-
-      currentZoom *= zoomSpeed;
-
-      // Increase iterations with zoom for better detail
-      const dynamicIter = Math.min(300, Math.floor(80 + Math.log2(currentZoom) * 20));
-
-      // Interpolate center from initial view to target (fast — reach target by zoom x20)
-      const t = Math.min(1, Math.log(currentZoom) / Math.log(20));
-      const cx = initCx + (zoomTargetX - initCx) * t;
-      const cy = initCy + (zoomTargetY - initCy) * t;
-
-      renderFrame(cx, cy, currentZoom, dynamicIter);
-
-      // Overlay zoom info
-      const zoomLabel = currentZoom < 1000
-        ? `x${currentZoom.toFixed(0)}`
-        : `x${(currentZoom / 1000).toFixed(1)}K`;
-
-      ctx.fillStyle = 'rgba(17, 23, 56, 0.7)';
-      ctx.fillRect(0, 0, w, 30);
-      ctx.fillStyle = '#66bb6a';
-      ctx.font = 'bold 13px JetBrains Mono, monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText(`ZOOM: ${zoomLabel}`, 12, 20);
-      ctx.fillStyle = '#9fa8da';
-      ctx.font = '11px Inter';
-      ctx.textAlign = 'right';
-      ctx.fillText(`Iteraciones: ${dynamicIter} | Centro: (${cx.toFixed(6)}, ${cy.toFixed(6)}i)`, w - 12, 20);
-
-      if (infoEl) infoEl.textContent = `Zoom ${zoomLabel} — Auto-similitud infinita`;
-      if (statsEl) statsEl.textContent = `Iteraciones: ${dynamicIter} — El patrón se repite sin importar cuánto nos acerquemos`;
-
-      if (currentZoom < maxZoom) {
-        buildAnimId = requestAnimationFrame(zoomFrame);
-      } else {
-        // Reset after reaching max zoom
-        buildTimeoutId = setTimeout(() => {
-          if (currentSlide === 13) {
-            currentRow = 0;
-            totalInSet = 0;
-            totalEscaped = 0;
-            ctx.fillStyle = '#111738';
-            ctx.fillRect(0, 0, w, h);
-            if (infoEl) infoEl.textContent = 'Reiniciando construcción...';
-            if (statsEl) statsEl.textContent = '';
-            buildAnimId = requestAnimationFrame(renderRows);
-          }
-        }, 2500);
-      }
+    function getDynamicIter() {
+      return Math.min(500, Math.floor(80 + Math.log2(Math.max(1, zoomLevel)) * 25));
     }
 
-    buildAnimId = requestAnimationFrame(zoomFrame);
+    function redraw() {
+      const iter = getDynamicIter();
+      renderFrame(zoomCx, zoomCy, zoomLevel, iter);
+      drawHUD(zoomCx, zoomCy, zoomLevel, iter);
+
+      const zoomLabel = zoomLevel < 1000
+        ? `x${zoomLevel.toFixed(0)}`
+        : zoomLevel < 1000000
+          ? `x${(zoomLevel / 1000).toFixed(1)}K`
+          : `x${(zoomLevel / 1000000).toFixed(2)}M`;
+
+      if (infoEl) infoEl.textContent = `Zoom ${zoomLabel} — Scroll para zoom, click para centrar`;
+      if (statsEl) statsEl.textContent = `Click derecho para resetear | Auto-similitud infinita`;
+    }
+
+    // Convert pixel position to complex coordinates
+    function pixelToComplex(px, py) {
+      const spanX = 3.5 / zoomLevel;
+      const spanY = spanX * (h / w);
+      return {
+        re: zoomCx + (px / w - 0.5) * spanX,
+        im: zoomCy + (py / h - 0.5) * spanY
+      };
+    }
+
+    // Wheel zoom — zoom towards mouse position
+    function onWheel(e) {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) * (w / rect.width);
+      const my = (e.clientY - rect.top) * (h / rect.height);
+
+      const before = pixelToComplex(mx, my);
+      const factor = e.deltaY < 0 ? 1.3 : 1 / 1.3;
+      zoomLevel = Math.max(1, zoomLevel * factor);
+
+      // Adjust center so the point under the mouse stays in place
+      const spanXAfter = 3.5 / zoomLevel;
+      const spanYAfter = spanXAfter * (h / w);
+      zoomCx = before.re - (mx / w - 0.5) * spanXAfter;
+      zoomCy = before.im - (my / h - 0.5) * spanYAfter;
+
+      redraw();
+    }
+
+    // Click — center on that point and zoom in
+    function onClick(e) {
+      const rect = canvas.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) * (w / rect.width);
+      const my = (e.clientY - rect.top) * (h / rect.height);
+
+      const target = pixelToComplex(mx, my);
+      zoomCx = target.re;
+      zoomCy = target.im;
+      zoomLevel *= 2.5;
+
+      redraw();
+    }
+
+    // Right click — reset
+    function onContextMenu(e) {
+      e.preventDefault();
+      zoomCx = initCx;
+      zoomCy = initCy;
+      zoomLevel = 1;
+      redraw();
+    }
+
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    canvas.addEventListener('click', onClick);
+    canvas.addEventListener('contextmenu', onContextMenu);
+
+    // Cleanup function for when we leave the slide or re-init
+    mbInteractiveCleanup = function() {
+      canvas.removeEventListener('wheel', onWheel);
+      canvas.removeEventListener('click', onClick);
+      canvas.removeEventListener('contextmenu', onContextMenu);
+    };
+
+    // Initial render with HUD
+    redraw();
   }
 
   // Start phase 1
