@@ -75,8 +75,8 @@ function triggerCanvases(index) {
     if (index === 12) drawMandelbrot();
     if (index === 13) drawMandelbrotBuild();
     if (index === 14) drawCryptoDemo();
-    if (index === 16) drawFractalTree();
-    if (index === 17) drawRotation();
+    if (index === 16) drawRotation();
+    if (index === 17) drawFractalTree();
     if (index === 19) drawQAMDemo();
     if (index === 20) drawControlDemo();
   }, 400);
@@ -696,7 +696,7 @@ function drawRotation() {
     ctx.fillText('Im', cx + 15, 15);
 
     angle += 0.008;
-    if (currentSlide === 17) {
+    if (currentSlide === 16) {
       rotationAnimId = requestAnimationFrame(animate);
     }
   }
