@@ -484,6 +484,15 @@ function setResult(id, real, imag) {
 // ============================================
 let fractalTreeInitialized = false;
 
+const treePalettes = {
+  fire:   { trunk: [255, 106, 0],  tip: [238, 9, 121],  dot: [255, 50, 80]   },
+  nature: { trunk: [139, 69, 19],  tip: [102, 187, 106], dot: [130, 220, 130] },
+  ice:    { trunk: [0, 210, 255],   tip: [146, 141, 255], dot: [180, 180, 255] },
+  gold:   { trunk: [247, 151, 30],  tip: [255, 210, 0],   dot: [255, 230, 100] },
+  neon:   { trunk: [183, 33, 255],  tip: [33, 212, 253],  dot: [100, 255, 220] },
+  mono:   { trunk: [200, 200, 200], tip: [100, 100, 100], dot: [160, 160, 160] },
+};
+
 function drawFractalTree() {
   const canvas = document.getElementById('fractalTreeCanvas');
   if (!canvas) return;
@@ -491,106 +500,131 @@ function drawFractalTree() {
   const w = canvas.width;
   const h = canvas.height;
 
-  const angleSlider = document.getElementById('treeAngleSlider');
   const depthSlider = document.getElementById('treeDepthSlider');
-  const angleLabel = document.getElementById('treeAngleLabel');
-  const depthLabel = document.getElementById('treeDepthLabel');
+  const angleLSlider = document.getElementById('treeAngleLSlider');
+  const angleRSlider = document.getElementById('treeAngleRSlider');
+  const trunkSlider = document.getElementById('treeTrunkSlider');
+  const colorRow = document.getElementById('treeColorRow');
 
-  function getAngle() { return parseFloat(angleSlider?.value || 25); }
-  function getDepth() { return parseInt(depthSlider?.value || 10); }
+  let activePalette = 'fire';
+
+  function val(el, fallback) { return parseFloat(el?.value || fallback); }
 
   function render() {
-    const angleDeg = getAngle();
-    const depth = getDepth();
-    const angleRad = angleDeg * Math.PI / 180;
+    const depth = val(depthSlider, 11);
+    const angL = val(angleLSlider, 45) * Math.PI / 180;
+    const angR = val(angleRSlider, 25) * Math.PI / 180;
+    const trunkLen = val(trunkSlider, 108);
 
-    if (angleLabel) angleLabel.textContent = `Ángulo: ${angleDeg}°`;
-    if (depthLabel) depthLabel.textContent = `Profundidad: ${depth}`;
+    // Update labels
+    const dv = document.getElementById('treeDepthVal');
+    const lv = document.getElementById('treeAngleLVal');
+    const rv = document.getElementById('treeAngleRVal');
+    const tv = document.getElementById('treeTrunkVal');
+    if (dv) dv.textContent = depth;
+    if (lv) lv.textContent = val(angleLSlider, 45) + '°';
+    if (rv) rv.textContent = val(angleRSlider, 25) + '°';
+    if (tv) tv.textContent = Math.round(trunkLen);
 
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#111738';
+    ctx.fillStyle = '#0a0e27';
     ctx.fillRect(0, 0, w, h);
 
-    // Ground line
-    ctx.strokeStyle = 'rgba(92, 107, 192, 0.15)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, h - 20);
-    ctx.lineTo(w, h - 20);
-    ctx.stroke();
+    const pal = treePalettes[activePalette];
+    const shrink = 0.72;
+    let branchCount = 0;
 
-    const startX = w / 2;
-    const startY = h - 20;
-    const trunkLen = h * 0.22;
+    function lerpColor(c1, c2, t) {
+      return [
+        Math.round(c1[0] + (c2[0] - c1[0]) * t),
+        Math.round(c1[1] + (c2[1] - c1[1]) * t),
+        Math.round(c1[2] + (c2[2] - c1[2]) * t),
+      ];
+    }
 
     function drawBranch(x, y, dirX, dirY, len, level) {
-      if (level > depth || len < 1.5) return;
+      if (level > depth || len < 1) return;
 
       const endX = x + dirX * len;
       const endY = y + dirY * len;
-
-      // Color: trunk brown → green leaves
       const t = level / depth;
-      const r = Math.floor(80 + (30 - 80) * t);
-      const g = Math.floor(50 + (180 - 50) * t);
-      const b = Math.floor(20 + (60 - 20) * t);
-      ctx.strokeStyle = `rgb(${r},${g},${b})`;
-      ctx.lineWidth = Math.max(1, (depth - level) * 1.2);
+      const [r, g, b] = lerpColor(pal.trunk, pal.tip, t);
 
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(endX, endY);
-      ctx.stroke();
-
-      // Leaf dots at the tips
-      if (level >= depth - 1) {
-        ctx.fillStyle = `rgba(102, 187, 106, ${0.6 + Math.random() * 0.4})`;
-        ctx.beginPath();
-        ctx.arc(endX, endY, 2 + Math.random() * 2, 0, Math.PI * 2);
-        ctx.fill();
+      // Glow effect for thicker branches
+      const lw = Math.max(0.5, (depth - level) * 1.4);
+      if (lw > 2) {
+        ctx.strokeStyle = `rgba(${r},${g},${b},0.15)`;
+        ctx.lineWidth = lw + 4;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(endX, endY); ctx.stroke();
       }
 
-      // Rotate direction using complex multiplication: (dx + dy*i) * e^(i*angle)
-      // e^(iθ) = cos(θ) + i·sin(θ)
-      const cosA = Math.cos(angleRad);
-      const sinA = Math.sin(angleRad);
-      const shrink = 0.72;
+      ctx.strokeStyle = `rgb(${r},${g},${b})`;
+      ctx.lineWidth = lw;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(endX, endY); ctx.stroke();
+      branchCount++;
+
+      // Dots at tips
+      if (level >= depth - 1) {
+        const [dr, dg, db] = pal.dot;
+        const dotSize = 1.5 + Math.random() * 2.5;
+        ctx.fillStyle = `rgba(${dr},${dg},${db},${0.5 + Math.random() * 0.5})`;
+        ctx.beginPath(); ctx.arc(endX, endY, dotSize, 0, Math.PI * 2); ctx.fill();
+      }
+
       const newLen = len * shrink;
 
-      // Right branch: rotate by -θ
-      const rDirX = dirX * cosA - dirY * (-sinA);
-      const rDirY = dirX * (-sinA) + dirY * cosA;
+      // Left branch: rotate by +θ₁ (complex multiplication)
+      const cosL = Math.cos(angL), sinL = Math.sin(angL);
+      const lDirX = dirX * cosL - dirY * sinL;
+      const lDirY = dirX * sinL + dirY * cosL;
 
-      // Left branch: rotate by +θ
-      const lDirX = dirX * cosA - dirY * sinA;
-      const lDirY = dirX * sinA + dirY * cosA;
+      // Right branch: rotate by -θ₂
+      const cosR = Math.cos(angR), sinR = Math.sin(angR);
+      const rDirX = dirX * cosR + dirY * sinR;
+      const rDirY = -dirX * sinR + dirY * cosR;
 
-      drawBranch(endX, endY, rDirX, rDirY, newLen, level + 1);
       drawBranch(endX, endY, lDirX, lDirY, newLen, level + 1);
+      drawBranch(endX, endY, rDirX, rDirY, newLen, level + 1);
     }
 
-    // Initial direction: straight up (0, -1)
-    drawBranch(startX, startY, 0, -1, trunkLen, 0);
+    drawBranch(w / 2, h - 15, 0, -1, trunkLen, 0);
 
     // HUD
-    ctx.fillStyle = 'rgba(17, 23, 56, 0.75)';
-    ctx.fillRect(0, 0, w, 28);
+    ctx.fillStyle = 'rgba(10, 14, 39, 0.8)';
+    ctx.fillRect(0, 0, w, 26);
     ctx.fillStyle = '#66bb6a';
     ctx.font = 'bold 12px JetBrains Mono, monospace';
     ctx.textAlign = 'left';
-    ctx.fillText(`θ = ${angleDeg}°`, 12, 18);
+    ctx.fillText(`z' = z + r·e^(iθ)`, 10, 17);
     ctx.fillStyle = '#9fa8da';
     ctx.font = '11px Inter';
     ctx.textAlign = 'right';
-    ctx.fillText(`Ramas: z' = z + L · e^(iθ)  |  Profundidad: ${depth}  |  Factor: 0.72`, w - 12, 18);
+    ctx.fillText(`θ₁=${val(angleLSlider,45)}°  θ₂=${val(angleRSlider,25)}°  |  ramas: ${branchCount.toLocaleString()}`, w - 10, 17);
+
+    const bc = document.getElementById('treeBranchCount');
+    const cs = document.getElementById('treeCanvasSize');
+    if (bc) bc.textContent = `ramas: ${branchCount.toLocaleString()}`;
+    if (cs) cs.textContent = `canvas: ${w}×${h}`;
   }
 
   render();
 
   if (!fractalTreeInitialized) {
     fractalTreeInitialized = true;
-    if (angleSlider) angleSlider.addEventListener('input', render);
-    if (depthSlider) depthSlider.addEventListener('input', render);
+    [depthSlider, angleLSlider, angleRSlider, trunkSlider].forEach(s => {
+      if (s) s.addEventListener('input', render);
+    });
+
+    if (colorRow) {
+      colorRow.addEventListener('click', function(e) {
+        const btn = e.target.closest('.tree-color-btn');
+        if (!btn) return;
+        colorRow.querySelectorAll('.tree-color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activePalette = btn.dataset.palette;
+        render();
+      });
+    }
   }
 }
 

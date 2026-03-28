@@ -723,36 +723,44 @@ z = 3 + 4j
         <div class="section-label">Demo en Vivo</div>
         <h2 class="slide-title">Árbol Fractal: Rotaciones en Acción</h2>
         <div class="fractal-tree-layout">
-          <div class="fractal-tree-canvas-wrap">
-            <canvas id="fractalTreeCanvas" width="560" height="420"></canvas>
-            <div class="fractal-tree-info" id="fractalTreeInfo">
-              <span id="treeAngleLabel">Ángulo: 25°</span>
-              <span id="treeDepthLabel">Profundidad: 10</span>
-            </div>
-          </div>
           <div class="fractal-tree-controls reveal-item">
+            <div class="tree-params-label">PARÁMETROS</div>
             <div class="tree-control-card">
-              <label for="treeAngleSlider">Ángulo θ de las ramas</label>
-              <input type="range" id="treeAngleSlider" min="5" max="80" value="25" step="1">
-              <div class="tree-slider-labels"><span>5°</span><span>80°</span></div>
+              <div class="tree-slider-header"><span>Profundidad</span><span id="treeDepthVal">11</span></div>
+              <input type="range" id="treeDepthSlider" min="1" max="13" value="11" step="1">
             </div>
             <div class="tree-control-card">
-              <label for="treeDepthSlider">Profundidad (recursión)</label>
-              <input type="range" id="treeDepthSlider" min="1" max="13" value="10" step="1">
-              <div class="tree-slider-labels"><span>1</span><span>13</span></div>
+              <div class="tree-slider-header"><span>Ángulo izq θ₁</span><span id="treeAngleLVal">45°</span></div>
+              <input type="range" id="treeAngleLSlider" min="5" max="85" value="45" step="1">
+            </div>
+            <div class="tree-control-card">
+              <div class="tree-slider-header"><span>Ángulo der θ₂</span><span id="treeAngleRVal">25°</span></div>
+              <input type="range" id="treeAngleRSlider" min="5" max="85" value="25" step="1">
+            </div>
+            <div class="tree-control-card">
+              <div class="tree-slider-header"><span>Longitud tronco</span><span id="treeTrunkVal">108</span></div>
+              <input type="range" id="treeTrunkSlider" min="40" max="180" value="108" step="1">
+            </div>
+            <div class="tree-params-label">COLOR</div>
+            <div class="tree-color-row" id="treeColorRow">
+              <button class="tree-color-btn active" data-palette="fire" title="Fuego"><span style="background:linear-gradient(135deg,#ff6a00,#ee0979)"></span></button>
+              <button class="tree-color-btn" data-palette="nature" title="Natural"><span style="background:linear-gradient(135deg,#8B4513,#66bb6a)"></span></button>
+              <button class="tree-color-btn" data-palette="ice" title="Hielo"><span style="background:linear-gradient(135deg,#00d2ff,#928dff)"></span></button>
+              <button class="tree-color-btn" data-palette="gold" title="Oro"><span style="background:linear-gradient(135deg,#f7971e,#ffd200)"></span></button>
+              <button class="tree-color-btn" data-palette="neon" title="Neón"><span style="background:linear-gradient(135deg,#b721ff,#21d4fd)"></span></button>
+              <button class="tree-color-btn" data-palette="mono" title="Mono"><span style="background:linear-gradient(135deg,#ccc,#555)"></span></button>
             </div>
             <div class="tree-formula-card reveal-item">
-              <p><strong>Cada rama usa:</strong></p>
-              <code>z' = z + L · e^(iθ)</code>
-              <p class="tree-formula-explain">Multiplicar por <em>e^(iθ)</em> rota la dirección θ grados. Reducir L achica la rama.</p>
+              <p>Cada rama → dos hijos</p>
+              <p>rotados con <strong style="color:#66bb6a">e^(iθ₁)</strong> y <strong style="color:#66bb6a">e^(iθ₂)</strong></p>
+              <p><strong style="color:#5c6bc0">Autosimilar → fractal puro</strong></p>
             </div>
-            <div class="tree-uses-card reveal-item">
-              <p><strong>Se usa en:</strong></p>
-              <ul>
-                <li>Generación de vegetación en videojuegos</li>
-                <li>L-Systems (No Man's Sky, Houdini)</li>
-                <li>Arte generativo y VFX</li>
-              </ul>
+          </div>
+          <div class="fractal-tree-canvas-wrap">
+            <canvas id="fractalTreeCanvas" width="700" height="500"></canvas>
+            <div class="fractal-tree-info" id="fractalTreeInfo">
+              <span id="treeBranchCount">ramas: 0</span>
+              <span id="treeCanvasSize">canvas: 700×500</span>
             </div>
           </div>
         </div>
