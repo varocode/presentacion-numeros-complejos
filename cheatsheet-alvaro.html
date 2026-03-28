@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheat Sheet — Alvaro Acevedo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #e0e0e0;
+      background: #0a0e27;
+      padding: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 18px;
+      text-align: center;
+      color: #66bb6a;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(92,107,192,0.3);
+    }
+
+    .slide-block {
+      margin-bottom: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .slide-title {
+      background: linear-gradient(135deg, #5c6bc0, #7e57c2);
+      color: white;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .slide-title .num {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+    }
+
+    .slide-body {
+      background: rgba(92,107,192,0.08);
+      padding: 10px 12px;
+    }
+
+    .key {
+      font-size: 12px;
+      font-weight: 700;
+      color: #66bb6a;
+      margin-bottom: 2px;
+    }
+
+    .points {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 8px;
+    }
+
+    .points li {
+      font-size: 13px;
+      padding: 2px 0 2px 16px;
+      position: relative;
+      color: #ccc;
+    }
+
+    .points li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #5c6bc0;
+    }
+
+    .demo {
+      background: rgba(255,152,0,0.12);
+      border-left: 3px solid #ff9800;
+      padding: 5px 10px;
+      margin: 6px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: #ffb74d;
+    }
+
+    .trans {
+      background: rgba(126,87,194,0.12);
+      border-left: 3px solid #7e57c2;
+      padding: 5px 10px;
+      margin-top: 6px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: #b39ddb;
+      font-style: italic;
+    }
+
+    .hi {
+      color: #66bb6a;
+      font-weight: 700;
+    }
+
+    .warn {
+      color: #ff9800;
+      font-weight: 600;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      color: #555;
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(92,107,192,0.2);
+    }
+
+    .quick-ref {
+      background: rgba(102,187,106,0.1);
+      border: 1px solid rgba(102,187,106,0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+    }
+
+    .quick-ref h2 {
+      font-size: 12px;
+      color: #66bb6a;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .quick-ref p {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 3px;
+    }
+
+    .quick-ref code {
+      background: rgba(92,107,192,0.15);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+      color: #9fa8da;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CHEAT SHEET</h1>
+  <div class="subtitle">Alvaro Acevedo — Exposición Grupo 1 — Marzo 2026</div>
+
+  <div class="quick-ref">
+    <h2>Reglas de oro</h2>
+    <p>1. Mirá al público, no a la pantalla</p>
+    <p>2. Si te perdés → mirá el slide, tiene todo</p>
+    <p>3. Las pausas son tu aliado, no tu enemigo</p>
+    <p>4. Fórmula clave: <code>z = z² + c</code></p>
+  </div>
+
+  <!-- SLIDE 13 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Fractales: Mandelbrot
+      <span class="num">Slide 13</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>El Mandelbrot se genera con <span class="hi">z² + c</span> (complejos)</li>
+        <li>3 pasos: repetir fórmula → si |z| &lt; 2 es negro → si escapa, color</li>
+        <li>Se usa en: No Man's Sky, arte generativo, antenas de celulares</li>
+      </ul>
+      <div class="demo">CLICK en el fractal para mostrar iteraciones de un punto</div>
+      <div class="trans">"Pero quiero que vean algo todavía más impresionante. Vamos a construirlo desde cero, en vivo."</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Demo: Construcción + Zoom
+      <span class="num">Slide 14</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>Se construye píxel por píxel (línea roja bajando)</li>
+        <li>Cuando termina → <span class="hi">VOS hacés zoom</span> con el mouse</li>
+        <li>Concepto clave: <span class="hi">auto-similitud</span> (patrón se repite infinito)</li>
+      </ul>
+      <div class="demo">
+        <span class="warn">Controles:</span> Scroll = zoom | Click izq = centrar + zoom | Click der = reset
+      </div>
+      <div class="key" style="margin-top:6px">Momento de impacto:</div>
+      <ul class="points">
+        <li>Hacé zoom profundo hasta ver mini-Mandelbrots</li>
+        <li>Mirá al público y decí: <span class="hi">"Es infinito. Un universo dentro de otro. Y todo sale de z² + c."</span></li>
+        <li>2 segundos de silencio. Que lo procesen.</li>
+      </ul>
+      <div class="trans">"Si la multiplicación compleja genera complejidad infinita... imagínense lo que puede hacer en seguridad informática."</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Criptografía
+      <span class="num">Slide 15</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>Criptografía protege contraseñas, bancos, WhatsApp</li>
+        <li>RSA funciona con primos grandes, pero la <span class="hi">computación cuántica</span> puede romperlo</li>
+        <li>El algoritmo de Shor usa la Transformada Cuántica de Fourier (complejos)</li>
+        <li>La animación muestra: multiplicar por complejo = <span class="hi">rotar + escalar = encriptar</span></li>
+      </ul>
+      <div class="trans">"Y hablando de tecnologías que usan números complejos... hablemos de inteligencia artificial."</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Inteligencia Artificial
+      <span class="num">Slide 16</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>Asistentes de voz: <span class="hi">Voz → FFT (complejos) → Frecuencias → IA → Respuesta</span></li>
+        <li>Sin FFT, Siri/Alexa NO funcionan</li>
+        <li>Existen redes neuronales de valores complejos (mejor para radar, sonar)</li>
+      </ul>
+      <div class="demo">Señalar el diagrama de flujo de abajo</div>
+      <div class="trans">"Y ahora vamos con mi tema favorito: los videojuegos."</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Videojuegos y Gráficos
+      <span class="num">Slide 17</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>Punto (x,y) = número complejo a + bi → <span class="hi">son equivalentes</span></li>
+        <li>Rotar = multiplicar por e^(iθ) | Escalar = multiplicar por r</li>
+        <li>La animación muestra un punto rotando en el plano complejo</li>
+        <li>3D: <span class="hi">Quaterniones</span> (q = a + bi + cj + dk) → Unity, Unreal, drones, VR</li>
+      </ul>
+      <div class="trans">"Les voy a demostrar esto en vivo. Vamos a construir algo con esa fórmula de rotación."</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18 -->
+  <div class="slide-block">
+    <div class="slide-title">
+      Demo: Árbol Fractal
+      <span class="num">Slide 18</span>
+    </div>
+    <div class="slide-body">
+      <div class="key">De qué va:</div>
+      <ul class="points">
+        <li>Árbol generado con <span class="hi">z' = z + L · e^(iθ)</span></li>
+        <li>Cada rama = rotación con número complejo</li>
+        <li>Se usa en: videojuegos (vegetación), L-Systems, VFX</li>
+      </ul>
+      <div class="demo">
+        <span class="warn">Hacer en este orden:</span><br>
+        1. Mover θ₁ (rama izq) → el árbol cambia de forma<br>
+        2. Poner ángulos distintos → asimetría natural<br>
+        3. Bajar profundidad a 1 y subir lento → el público ve el árbol "crecer"<br>
+        4. Cambiar colores (fuego, hielo, neón)
+      </div>
+      <div class="key" style="margin-top:6px">Cierre final:</div>
+      <ul class="points">
+        <li><span class="hi">"Vimos fractales, cripto, IA, videojuegos. Todo con la misma matemática: números complejos."</span></li>
+        <li>Le pasás la palabra a Julio</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    Leé el guion completo hoy. Mañana solo necesitás esto en el celular.
+  </div>
+
+</body>
+</html>
