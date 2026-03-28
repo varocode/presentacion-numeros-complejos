@@ -505,6 +505,7 @@ function drawFractalTree() {
   const angleRSlider = document.getElementById('treeAngleRSlider');
   const trunkSlider = document.getElementById('treeTrunkSlider');
   const colorRow = document.getElementById('treeColorRow');
+  const conjugateToggle = document.getElementById('treeConjugateToggle');
 
   let activePalette = 'fire';
 
@@ -587,7 +588,35 @@ function drawFractalTree() {
       drawBranch(endX, endY, rDirX, rDirY, newLen, level + 1);
     }
 
-    drawBranch(w / 2, h - 15, 0, -1, trunkLen, 0);
+    const showConjugate = conjugateToggle?.checked || false;
+    const treeBaseY = showConjugate ? h * 0.42 : h - 15;
+
+    // Draw main tree
+    drawBranch(w / 2, treeBaseY, 0, -1, trunkLen, 0);
+
+    // Draw conjugate reflection (z̄ = a - bi → flip Y)
+    if (showConjugate) {
+      // Water/mirror line
+      ctx.strokeStyle = 'rgba(92, 107, 192, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(40, treeBaseY);
+      ctx.lineTo(w - 40, treeBaseY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Label
+      ctx.fillStyle = '#5c6bc0';
+      ctx.font = 'bold 11px Inter';
+      ctx.textAlign = 'right';
+      ctx.fillText('z̄ = a − bi (espejo)', w - 45, treeBaseY + 14);
+
+      // Draw reflected tree with lower opacity
+      ctx.globalAlpha = 0.4;
+      drawBranch(w / 2, treeBaseY, 0, 1, trunkLen, 0);
+      ctx.globalAlpha = 1;
+    }
 
     // HUD
     ctx.fillStyle = 'rgba(10, 14, 39, 0.8)';
@@ -595,7 +624,8 @@ function drawFractalTree() {
     ctx.fillStyle = '#66bb6a';
     ctx.font = 'bold 12px JetBrains Mono, monospace';
     ctx.textAlign = 'left';
-    ctx.fillText(`z' = z + r·e^(iθ)`, 10, 17);
+    const hudFormula = showConjugate ? `z̄ = a − bi  (conjugado activo)` : `z' = z + r·e^(iθ)`;
+    ctx.fillText(hudFormula, 10, 17);
     ctx.fillStyle = '#9fa8da';
     ctx.font = '11px Inter';
     ctx.textAlign = 'right';
@@ -614,6 +644,8 @@ function drawFractalTree() {
     [depthSlider, angleLSlider, angleRSlider, trunkSlider].forEach(s => {
       if (s) s.addEventListener('input', render);
     });
+
+    if (conjugateToggle) conjugateToggle.addEventListener('change', render);
 
     if (colorRow) {
       colorRow.addEventListener('click', function(e) {
