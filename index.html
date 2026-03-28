@@ -18,7 +18,7 @@
     <button class="nav-btn" id="btnPrev" title="Anterior (←)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <span class="slide-counter" id="slideCounter">1 / 24</span>
+    <span class="slide-counter" id="slideCounter">1 / 25</span>
     <button class="nav-btn" id="btnNext" title="Siguiente (→)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
@@ -112,7 +112,7 @@
               <span class="agenda-speaker">Alvaro Acevedo</span>
             </div>
           </div>
-          <div class="agenda-card" onclick="goToSlide(16)">
+          <div class="agenda-card" onclick="goToSlide(17)">
             <div class="agenda-num">05</div>
             <div class="agenda-info">
               <h4>Telecom, Robótica y Cuántica</h4>
@@ -120,7 +120,7 @@
               <span class="agenda-speaker">Julio Castillo</span>
             </div>
           </div>
-          <div class="agenda-card" onclick="goToSlide(20)">
+          <div class="agenda-card" onclick="goToSlide(21)">
             <div class="agenda-num">06</div>
             <div class="agenda-info">
               <h4>Conclusiones</h4>
@@ -716,7 +716,50 @@ z = 3 + 4j
       </div>
     </section>
 
-    <!-- SLIDE 16: Transición -->
+    <!-- SLIDE 16: Árbol Fractal (Demo) -->
+    <section class="slide" data-title="Demo: Árbol Fractal" data-speaker="Alvaro Acevedo">
+      <div class="slide-inner">
+        <div class="speaker-badge">Alvaro Acevedo</div>
+        <div class="section-label">Demo en Vivo</div>
+        <h2 class="slide-title">Árbol Fractal: Rotaciones en Acción</h2>
+        <div class="fractal-tree-layout">
+          <div class="fractal-tree-canvas-wrap">
+            <canvas id="fractalTreeCanvas" width="560" height="420"></canvas>
+            <div class="fractal-tree-info" id="fractalTreeInfo">
+              <span id="treeAngleLabel">Ángulo: 25°</span>
+              <span id="treeDepthLabel">Profundidad: 10</span>
+            </div>
+          </div>
+          <div class="fractal-tree-controls reveal-item">
+            <div class="tree-control-card">
+              <label for="treeAngleSlider">Ángulo θ de las ramas</label>
+              <input type="range" id="treeAngleSlider" min="5" max="80" value="25" step="1">
+              <div class="tree-slider-labels"><span>5°</span><span>80°</span></div>
+            </div>
+            <div class="tree-control-card">
+              <label for="treeDepthSlider">Profundidad (recursión)</label>
+              <input type="range" id="treeDepthSlider" min="1" max="13" value="10" step="1">
+              <div class="tree-slider-labels"><span>1</span><span>13</span></div>
+            </div>
+            <div class="tree-formula-card reveal-item">
+              <p><strong>Cada rama usa:</strong></p>
+              <code>z' = z + L · e^(iθ)</code>
+              <p class="tree-formula-explain">Multiplicar por <em>e^(iθ)</em> rota la dirección θ grados. Reducir L achica la rama.</p>
+            </div>
+            <div class="tree-uses-card reveal-item">
+              <p><strong>Se usa en:</strong></p>
+              <ul>
+                <li>Generación de vegetación en videojuegos</li>
+                <li>L-Systems (No Man's Sky, Houdini)</li>
+                <li>Arte generativo y VFX</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 17: Transición -->
     <section class="slide slide-transition" data-title="— Aplicaciones Avanzadas">
       <div class="transition-content">
         <div class="transition-number">Parte IV</div>

@@ -1490,6 +1490,173 @@ code.formula {
 }
 
 /* ============================================
+   FRACTAL TREE
+   ============================================ */
+.fractal-tree-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.fractal-tree-canvas-wrap {
+  flex: 1;
+  text-align: center;
+}
+
+.fractal-tree-canvas-wrap canvas {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(92, 107, 192, 0.2);
+}
+
+.fractal-tree-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fractal-tree-controls {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tree-control-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(92, 107, 192, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.tree-control-card label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.tree-control-card input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(92, 107, 192, 0.2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.tree-control-card input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  border: 2px solid var(--bg-dark);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.tree-control-card input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.tree-control-card input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-bright);
+  border: 2px solid var(--bg-dark);
+  cursor: pointer;
+}
+
+.tree-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.tree-formula-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(102, 187, 106, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.tree-formula-card p {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.tree-formula-card code {
+  display: block;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #66bb6a;
+  padding: 6px 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.tree-formula-explain {
+  margin-top: 4px;
+  font-size: 0.75rem !important;
+  color: var(--text-dim) !important;
+}
+
+.tree-uses-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(92, 107, 192, 0.12);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.tree-uses-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.tree-uses-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tree-uses-card ul li {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  padding: 2px 0 2px 14px;
+  position: relative;
+}
+
+.tree-uses-card ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .fractal-tree-layout { flex-direction: column; }
+  .fractal-tree-controls { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .tree-control-card { flex: 1 1 45%; }
+  .tree-formula-card { flex: 1 1 100%; }
+  .tree-uses-card { flex: 1 1 100%; }
+}
+
+/* ============================================
    TABLE
    ============================================ */
 .table-wrapper {

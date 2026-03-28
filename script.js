@@ -75,9 +75,10 @@ function triggerCanvases(index) {
     if (index === 12) drawMandelbrot();
     if (index === 13) drawMandelbrotBuild();
     if (index === 14) drawCryptoDemo();
-    if (index === 16) drawRotation();
-    if (index === 18) drawQAMDemo();
-    if (index === 19) drawControlDemo();
+    if (index === 16) drawFractalTree();
+    if (index === 17) drawRotation();
+    if (index === 19) drawQAMDemo();
+    if (index === 20) drawControlDemo();
   }, 400);
 }
 
@@ -479,6 +480,121 @@ function setResult(id, real, imag) {
 }
 
 // ============================================
+// CANVAS: Fractal Tree (Slide 16)
+// ============================================
+let fractalTreeInitialized = false;
+
+function drawFractalTree() {
+  const canvas = document.getElementById('fractalTreeCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const angleSlider = document.getElementById('treeAngleSlider');
+  const depthSlider = document.getElementById('treeDepthSlider');
+  const angleLabel = document.getElementById('treeAngleLabel');
+  const depthLabel = document.getElementById('treeDepthLabel');
+
+  function getAngle() { return parseFloat(angleSlider?.value || 25); }
+  function getDepth() { return parseInt(depthSlider?.value || 10); }
+
+  function render() {
+    const angleDeg = getAngle();
+    const depth = getDepth();
+    const angleRad = angleDeg * Math.PI / 180;
+
+    if (angleLabel) angleLabel.textContent = `Ángulo: ${angleDeg}°`;
+    if (depthLabel) depthLabel.textContent = `Profundidad: ${depth}`;
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#111738';
+    ctx.fillRect(0, 0, w, h);
+
+    // Ground line
+    ctx.strokeStyle = 'rgba(92, 107, 192, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, h - 20);
+    ctx.lineTo(w, h - 20);
+    ctx.stroke();
+
+    const startX = w / 2;
+    const startY = h - 20;
+    const trunkLen = h * 0.22;
+
+    function drawBranch(x, y, dirX, dirY, len, level) {
+      if (level > depth || len < 1.5) return;
+
+      const endX = x + dirX * len;
+      const endY = y + dirY * len;
+
+      // Color: trunk brown → green leaves
+      const t = level / depth;
+      const r = Math.floor(80 + (30 - 80) * t);
+      const g = Math.floor(50 + (180 - 50) * t);
+      const b = Math.floor(20 + (60 - 20) * t);
+      ctx.strokeStyle = `rgb(${r},${g},${b})`;
+      ctx.lineWidth = Math.max(1, (depth - level) * 1.2);
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+
+      // Leaf dots at the tips
+      if (level >= depth - 1) {
+        ctx.fillStyle = `rgba(102, 187, 106, ${0.6 + Math.random() * 0.4})`;
+        ctx.beginPath();
+        ctx.arc(endX, endY, 2 + Math.random() * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Rotate direction using complex multiplication: (dx + dy*i) * e^(i*angle)
+      // e^(iθ) = cos(θ) + i·sin(θ)
+      const cosA = Math.cos(angleRad);
+      const sinA = Math.sin(angleRad);
+      const shrink = 0.72;
+      const newLen = len * shrink;
+
+      // Right branch: rotate by -θ
+      const rDirX = dirX * cosA - dirY * (-sinA);
+      const rDirY = dirX * (-sinA) + dirY * cosA;
+
+      // Left branch: rotate by +θ
+      const lDirX = dirX * cosA - dirY * sinA;
+      const lDirY = dirX * sinA + dirY * cosA;
+
+      drawBranch(endX, endY, rDirX, rDirY, newLen, level + 1);
+      drawBranch(endX, endY, lDirX, lDirY, newLen, level + 1);
+    }
+
+    // Initial direction: straight up (0, -1)
+    drawBranch(startX, startY, 0, -1, trunkLen, 0);
+
+    // HUD
+    ctx.fillStyle = 'rgba(17, 23, 56, 0.75)';
+    ctx.fillRect(0, 0, w, 28);
+    ctx.fillStyle = '#66bb6a';
+    ctx.font = 'bold 12px JetBrains Mono, monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText(`θ = ${angleDeg}°`, 12, 18);
+    ctx.fillStyle = '#9fa8da';
+    ctx.font = '11px Inter';
+    ctx.textAlign = 'right';
+    ctx.fillText(`Ramas: z' = z + L · e^(iθ)  |  Profundidad: ${depth}  |  Factor: 0.72`, w - 12, 18);
+  }
+
+  render();
+
+  if (!fractalTreeInitialized) {
+    fractalTreeInitialized = true;
+    if (angleSlider) angleSlider.addEventListener('input', render);
+    if (depthSlider) depthSlider.addEventListener('input', render);
+  }
+}
+
+// ============================================
 // CANVAS: Rotation Demo (Slide 15)
 // ============================================
 let rotationAnimId = null;
@@ -580,7 +696,7 @@ function drawRotation() {
     ctx.fillText('Im', cx + 15, 15);
 
     angle += 0.008;
-    if (currentSlide === 16) {
+    if (currentSlide === 17) {
       rotationAnimId = requestAnimationFrame(animate);
     }
   }
@@ -1306,7 +1422,7 @@ function drawQAMDemo() {
     ctx.fillText(`Fase: ${(phase * 180 / Math.PI).toFixed(0)}°`, waveStartX + 8, infoY + 44);
 
     frameCount++;
-    if (currentSlide === 18) {
+    if (currentSlide === 19) {
       qamAnimId = requestAnimationFrame(animate);
     }
   }
@@ -1480,7 +1596,7 @@ function drawControlDemo() {
       trail = [];
     }
 
-    if (currentSlide === 19) {
+    if (currentSlide === 20) {
       controlAnimId = requestAnimationFrame(animate);
     }
   }
